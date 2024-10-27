@@ -1,0 +1,60 @@
+Vad är pull respektive push?
+
+Svar:
+Med "git pull" så synkar vi fjärrinnehåll och hämtar de senaste ändringarna. Med andra ord det som finns på Git Hub 
+ exempelvis och om en kollega har gjort ändringar i en fil som vi båda arbetar med så behöver jag göra en "git pull" för
+att få ta del av de senaste ändringarna innan jag börjar göra nya ändringar/uppdateringar. Annars kan vi få en konflikt 
+när vi ska merga våra ändringar.
+
+Med git push laddar vi istället upp våra ändringar i en fil vi arbetat med så andra kan ta del av våra ändringar innan de
+börjar göra nya ändringar. Då ska de i sin tur göra en "git pull" för att hämta hem mina ändringar.
+
+
+När använder man log respektive status?
+
+Svar:
+"git status" låter oss inspektera the "working directory" och "the staging area". Det visar hela aktuella statusen av vårt
+"working tree" med filer som är staged, modifierade, borttagna och ospårbara.
+"git log" visar endast commit historiken för aktuell branch och vilka ändringar som är gjorda av vem samt när i tid de
+gjordes.
+
+Vad är en Git branch och varför är de viktiga?
+
+Svar:
+När vi skapar filer och gör commits på dem så skapas en master branch som pekar på den senaste committen som är gjord.
+Om vi vill ha en annan branch för att arbeta runt master-branchen så skapar vi en sådan med "git branch (filnamn)".
+Då kan vi testa att göra ändringar i filen vi arbetar med utan att påverka originalfilen innan vi vet om ändringarna vi
+har gjort fungerar och är tillfredsställande. Vi håller reda på vilken branch vi befinner oss på och vilken commit
+vi befinner oss på genom "HEAD-pekaren". När vi är nöjda med det arbete som finns på den nya branchen så kan vi merga 
+ändringarna till master-branchen för att få uppdateringarna dit. Brancher tillåter även att flera kollegor samtidigt
+arbetar på ändringar i en programkod utan att programmet påverkas innan allt är slutfört. Man får även då veta om det 
+finns några konflikter att hantera innan en merge kan genomföras, exempelvis om två gjort ändringar på samma rad, vilket
+gör att beslut behöver tas vilken av ändringarna som ska sparas.
+
+
+Att rulla tillbaka koden till ett tidigare tillstånd:
+
+git revert: Används när man inte är nöjd med den senaste committen eller flera commits i till exempel en annan branch
+än master. Om vi har gjort flera nya commits så kan vi först via kommandot "git status --oneline" få upp detaljer om
+alla commits och var HEAD pekar på. Där ser vi också alla commits hash-codes som vi kan använda oss av tillsammans 
+med git revert. Nämligen att skriva "git revert hash-code" så kan vi välja att gå tillbaka till en tidigare commit och
+sätta den var HEAD pekar på samtidigt som historiken är intakt. git ger då output att den: revert "the message that comes
+with the commit" och att HEAD pekar på den nya uppkomna committen i samband med git revert kommandot. git revert är 
+användbart om vi exempelvis hittat en bug i vårt program efter en längre tid  och behöver gå tillbaka flera steg
+för att rätta till det.
+
+git reset --soft HEAD~3: Tillägget ~3 gör att vi flyttar tillbaka den commit var HEAD pekar på tre steg så att den är 
+aktuell commit. Vi kan därmed flytta tillbaka oss i en branch så att master och testbranch är samma.  Till skillnad från 
+git revert så skapas här inte någon ny commit utan endast HEAD flyttas till önskad commit. De tidigare commitsen
+är dock inte tillgängliga utan hamnar i "staging area" och är redo att committas igen om
+så önskas, vilket vi ser om vi tar kommandot "git status". git reset låter oss ha kvar bara det vi vill och välja ut 
+det i projektet som vi vill ska finnas. Om vi istället använder git --reset (mixed) kommer de tidigare commitsen att 
+hamna i working directory som "unstaged".
+git reset --hard ska vi däremot bara använda oss av när vi arbetar lokalt och vill ta bort de commits som är gjorda 
+mellan där vi var och dit vi flyttar vart HEAD pekar. Om vi gör det i ett projekt med andra kan vi ta bort commits 
+som behövs av andra och förstör historiken i hela projektet.
+
+git restore: använder jag mig av om jag lagt till en fil i staging area som jag sedan ångrar och inte vill committa. Med
+kommandot "git restore --staged "filnamn" så tas det bort från staging area. Via git status kan jag se att det står 
+"changes not staged for commit". Om jag sedan vill ta bort den därifrån så skriver jag "git restore "filnamn". 
+Ändringarna som är gjorda i filen finns inte kvar och inte heller någon historik att det är gjort. 
